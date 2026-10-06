@@ -1,0 +1,25 @@
+# Runtime parameters — loaded by the registry and passed as Graph(config=...).
+# Separate from config/agent.yaml, which is the static manifest and carries
+# identity and compile-time requirements only.
+#
+# Every key below has a live reader. The extraction block is forwarded to the
+# inner workflow graph and seeded into its state, because node execute()
+# methods take no config argument — state seeding is the only route a runtime
+# value can travel into a domain node.
+
+max_retry: 3
+timeout_s: 30
+
+extraction:
+  # Document text beyond this many characters is not read. Bounds the work one
+  # request can cause and the size of everything downstream of it.
+  max_document_chars: 20000
+  # Cap on each extracted attribute rendered into the catalog entry
+  # (product name, price, ingredients, text excerpt). Read by the attribute
+  # extraction step; lowering it shortens the rendered fields.
+  max_field_chars: 200
+  # Cap on the number of allergen names reported. The mandatory declaration
+  # list is closed at 28, so this is a ceiling rather than a policy.
+  max_allergens: 28
+  # Cap on the number of certification names reported.
+  max_certifications: 16
